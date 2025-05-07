@@ -32,3 +32,26 @@ spec:
   - protocol: TCP
     port: 80 # service port
     targetPort: 80
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app1
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:879381244178:certificate/1ddc6f03-2564-4ee4-80f5-b585bf7ed081
+    alb.ingress.kubernetes.io/group.name: algotsarika
+spec:
+  ingressClassName: alb
+  rules:
+  - host: "app1.algot.online"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: app1
+            port:
+              number: 80
